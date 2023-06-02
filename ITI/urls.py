@@ -30,4 +30,7 @@ urlpatterns = [
     path('',Login,name='Login'),
     path('Logout',Logout,name='Logout'),
     path('Registration',Registration,name='Registration'),
+    # ------user list routing-----------
+    path('list/',user_list,name='user_list'),
+    
 ]

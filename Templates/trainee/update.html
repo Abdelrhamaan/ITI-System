@@ -1,0 +1,48 @@
+{%extends 'parent.html'%}
+{%block tit%}
+Trainee _ Update
+{%endblock%}
+{%block header%}
+Trainee _ Header
+{%endblock%}
+{%block content%}
+    <form method="post">
+        {%csrf_token%}
+        <label>Trainee Name</label>
+        <input type="text" name="trainee" value="{{trainee.name}}">
+        <br>
+        <label>Course ID</label>
+        <!-- <select name="course" >
+            {%for course in courses%}
+                <option value="{{course.id}}">{{course.name}}</option>
+            {%endfor%}
+        </select> -->
+        <select name="course" >
+            {%for course in courses%}
+                <option value="{{course.id}}"
+                    {%if course.id == trainee.course_id.id %} 
+                        selected
+                        {%endif%}
+                    >{{course.name}}
+                </option>
+            {%endfor%}
+        </select> 
+            <!-- <label>Course ID</label> 
+        <input type="number" name="course name"> -->
+        <br>
+        <input type="submit" value="Update">
+    </form>
+{%endblock%}
+
+
+<!-- <input type="text" name="taskname" value="{{taskdata.name}}">
+</br>
+<select name="catagory">
+    {%for cat in catagories%}
+        <option value="{{cat.id}}"
+        {% if cat.id == taskdata.catagoryid.id%}
+                selected
+                {%endif%}
+        >{{cat.name}}</option>
+    {%endfor%}
+</select> -->

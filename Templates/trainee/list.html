@@ -12,15 +12,23 @@ trainees _ List
         <tr>
             <th>id</th>
             <th>name</th>
+            <th>Course</th>
+            <th>ID_Course</th>
             <th>Actions</th>
         </tr>
         {%for trainee in trainees%}
             <tr>
-                <td>{{trainee| first}}</td>
-                <td>{{trainee.1}}</td>
+                <td>{{trainee.id}}</td>
+                <td>{{trainee.name}}</td>  
+                <!-- data coming from FK is an object so name in object-->
+                <!-- course_id the column of the relation between tables -->
+                <!-- this is first method  -->
+                <td>{{trainee.course_id.name}}</td>
+                <!-- second method with magic method values not in object -->
+                <td>{{trainee.course_id}}</td>
                 <td>
-                    <a href="{%url 'traineeDelete' trainee.0 %}">Delete</a>
-                    <a href="{%url 'traineeUpdate' trainee.0 %}">update</a>
+                    <a href="{%url 'traineeDelete' trainee.id %}">Delete</a>
+                    <a href="{%url 'traineeUpdate' trainee.id %}">update</a>
                 </td>
             </tr>
         {%endfor%}

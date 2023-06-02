@@ -1,0 +1,13 @@
+{%extends 'parent.html'%}
+{%block tit%}
+Users_List
+{%endblock%}
+{%block content%}
+{% for user in users %}
+{{user.id}}
+{{user.user_name}}
+{%endfor%}
+{%endblock%}
+{%block header%}
+Users_header
+{%endblock%}
