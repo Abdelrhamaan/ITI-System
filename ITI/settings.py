@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'trainee.apps.TraineeConfig',
     'course.apps.CourseConfig',
-    'myacount.apps.MyacountConfig'
+    'myacount.apps.MyacountConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -80,11 +81,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         # 'NAME': BASE_DIR / 'db.sqlite3',
-        'NAME':'itisyst',
-        'USER':'openpg',
-        'PASSWORD':'openpgpwd',
-        'HOST':'127.0.0.1',
-        'PORT':'5432'
+        'NAME': 'itisyst',
+        'USER': 'openpg',
+        'PASSWORD': 'openpgpwd',
+        'HOST': '127.0.0.1',
+        'PORT': '5432'
     }
 }
 

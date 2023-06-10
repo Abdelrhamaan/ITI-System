@@ -1,57 +1,68 @@
-from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
-from .models import *
-from course.models import *
+# to import response from api
+from rest_framework.response import Response
+# to make (get,post,delete,put) methods
+from rest_framework.decorators import api_view
+#  to import data base from models and serializer
+from .serializer import *
+from .models import *  
+from rest_framework.status import *
 
-# Create your views here.s
-# view python func must accept httprequest as object ,return httpresponse as object
 
-def traineeList(request):
-    # trainees = [(1,'ahmed'),(2,'mohamed'),(3,'ali')]
-    if('username' in request.session):
-        trainees = Trainee.objects.all()
-        context = {}
-        context['trainees']=trainees
-        return render(request,'trainee/list.html',context)
+@api_view(['GET'])
+def traineeList(req,id=None):
+    if (id is not None):
+        data = Trainee.objects.get(id=id)
     else:
-        return HttpResponseRedirect('/')
+        data = Trainee.objects.all()
 
-def traineeAdd(request):
-    if ('username' in request.session):
-        context= {}
-        context['courses'] = Course.objects.all()
-        if (request.method == 'POST'):
-            # ------ changing object coming from FK to int --------
-            catch = Course.objects.get(id=request.POST['course'])
-            # print (catch)
-            Trainee.objects.create(name=request.POST['trainee'],course_id = catch)
-        return render(request,'trainee/add.html',context)
-    else :
-        return HttpResponseRedirect('/')
+    if (data):
+        if (id is not None):
+            data_ser = TraineeSerializer(data)
+            return Response(status=HTTP_200_OK,data={'data':data_ser.data})
+        else:
+            data_ser = TraineeSerializer(data,many=True)
+        return Response(status=HTTP_207_MULTI_STATUS,data={'data':data_ser.data})
+    else:
+        return Response(status=HTTP_404_NOT_FOUND)
     
-    
-def traineeDelete(request,id):
-    Trainee.objects.filter(id=id).delete()
-    return HttpResponseRedirect('/trainee')
+@api_view(['POST'])
+def traineeAdd(req):
+    item = TraineeSerializer(data=req.data)
+    print(req.data)
+    ''' item is vaalid used to check if data is send with keys or format not in TraineeSerializer
+    he will not be able to convert it ''' 
+    if (item.is_valid()):
+        item.save()
+    return Response(status=HTTP_200_OK)
+
+@api_view(['PUT'])
+def traineeUpdate(req,id):
+        # check if id is found or not 
+        if(len(Trainee.objects.filter(id=id))!= 0):
+            # if id is found get data of this id 
+            get_data = Trainee.objects.get(id=id)
+            ''' then change it by serializer ----> we here used serialzier because of get_data is query set 
+            and req.data is object '''
+            update_data_ser = TraineeSerializer(instance=get_data,data=req.data)
+            # then check updated data is valid
+            if (update_data_ser.is_valid()):
+                # if data is valid save it 
+                update_data_ser.save()
+                return Response(status=HTTP_200_OK,data=update_data_ser.data)
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST,data={'message':'id not found'})
 
 
-def traineeUpdate(request,id):
-    context = {}
-    context['courses'] =Course.objects.all()
-    # print(context['courses'])
-    context['traineedata'] = Trainee.objects.get(id=id)
-    if (request.method == 'POST'):
-        name = request.POST['trainee']
-        catch = Course.objects.get(id=request.POST['course'])
-        Trainee.objects.filter(id=id).update(name = name,course_id = catch)
-        # return HttpResponseRedirect('/trainee')
-    return render(request,'trainee/update.html',context)
+
+@api_view(['delete'])
+def traineeDelete(req,id):
+    data = Trainee.objects.get(id=id)
+    if (data is not None):
+        data.delete()
+        return Response(status=HTTP_200_OK)
+    else:
+        return Response(status=HTTP_404_NOT_FOUND)
 
 
-# context={}
-#     context['catagories']=Catagory.objects.all
-#     context['taskdata']=Task.objects.get(id=id)
-#     if(req.method=='POST'):
-#         name=req.POST['taskname']
-#         Task.objects.filter(id=id).update(name=req.POST['taskname'],catagoryid=Catagory.objects.get(id=req.POST['catagory']) )
-#         return HttpResponseRedirect('/Tasks')
+
+

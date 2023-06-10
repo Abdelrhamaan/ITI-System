@@ -8,4 +8,4 @@ class Trainee(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=25)
     # --- data coming from FK is object type not int -----
-    course_id = models.ForeignKey('course.Course',on_delete=models.CASCADE) 
+    course_id = models.ForeignKey('course.Course',on_delete=models.CASCADE,null=True) 
